@@ -1,0 +1,67 @@
+.page-container {
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    color: #1890ff;
+  }
+
+  .content-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+
+    .form-section {
+      width: calc(33.33% - 12px); // 修改为占据1/3宽度
+    }
+
+    .result-section {
+      width: calc(66.67% - 12px); // 修改为占据2/3宽度
+    }
+  }
+}
+
+.form-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  [nz-form-item] {
+    margin-bottom: 24px;
+  }
+
+  [nz-form-label] {
+    margin-bottom: 8px;
+  }
+
+  nz-date-picker,
+  nz-time-picker {
+    width: 100%;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+}
+
+.result-section {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  textarea {
+    width: 100%;
+    margin-top: 16px;
+  }
+}

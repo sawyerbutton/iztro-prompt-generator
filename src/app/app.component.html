@@ -1,0 +1,68 @@
+<div class="page-container">
+  <div class="title">紫微斗数排盘提示语生成器</div>
+  <div class="content-container">
+    <!-- 左侧表单区域 -->
+    <div class="form-section">
+      <form nz-form class="form-container">
+        <div nz-form-item>
+          <div nz-form-label>出生日期</div>
+          <div nz-form-control>
+            <nz-date-picker [(ngModel)]="dateValue" name="date"></nz-date-picker>
+          </div>
+        </div>
+
+        <div nz-form-item>
+          <div nz-form-label>出生时间</div>
+          <div nz-form-control>
+            <nz-time-picker [(ngModel)]="timeValue" name="time" [nzFormat]="'HH:mm'"></nz-time-picker>
+          </div>
+        </div>
+
+        <div nz-form-item>
+          <div nz-form-label>性别</div>
+          <div nz-form-control>
+            <nz-radio-group [(ngModel)]="gender" name="gender" [nzButtonStyle]="'solid'">
+              <label nz-radio-button nzValue="male">男</label>
+              <label nz-radio-button nzValue="female">女</label>
+            </nz-radio-group>
+          </div>
+        </div>
+
+        <div nz-form-item>
+          <div nz-form-label>历法</div>
+          <div nz-form-control>
+            <nz-radio-group [(ngModel)]="calendar" name="calendar" [nzButtonStyle]="'solid'">
+              <label nz-radio-button nzValue="solar">阳历</label>
+              <label nz-radio-button nzValue="lunar">阴历</label>
+            </nz-radio-group>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button 
+            nz-button 
+            nzType="primary" 
+            [disabled]="!isFormValid"
+            (click)="generateChart()"
+          >
+            生成
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 右侧结果展示区域 -->
+    <div class="result-section">
+      <nz-tabset>
+        <nz-tab nzTitle="提示语（接地气的文）">
+          <nz-empty *ngIf="!chartData" [nzNotFoundContent]="'暂无内容'"></nz-empty>
+          <app-prompt-text *ngIf="chartData" [astroData]="chartData"></app-prompt-text>
+        </nz-tab>
+        <nz-tab nzTitle="星盘（高大上的图）">
+          <nz-empty *ngIf="!chartData" [nzNotFoundContent]="'暂无内容'"></nz-empty>
+          <app-astro-chart *ngIf="chartData" [astroData]="chartData"></app-astro-chart>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+</div>
