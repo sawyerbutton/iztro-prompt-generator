@@ -12,9 +12,14 @@
         </div>
 
         <div nz-form-item>
-          <div nz-form-label>出生时间</div>
+          <div nz-form-label>出生时辰</div>
           <div nz-form-control>
-            <nz-time-picker [(ngModel)]="timeValue" name="time" [nzFormat]="'HH:mm'"></nz-time-picker>
+            <nz-select [(ngModel)]="timeIndex" name="timeIndex">
+              <nz-option *ngFor="let option of timeOptions" 
+                         [nzValue]="option.value" 
+                         [nzLabel]="option.label">
+              </nz-option>
+            </nz-select>
           </div>
         </div>
 
@@ -22,8 +27,8 @@
           <div nz-form-label>性别</div>
           <div nz-form-control>
             <nz-radio-group [(ngModel)]="gender" name="gender" [nzButtonStyle]="'solid'">
-              <label nz-radio-button nzValue="male">男</label>
-              <label nz-radio-button nzValue="female">女</label>
+              <label nz-radio-button nzValue="男">男</label>
+              <label nz-radio-button nzValue="女">女</label>
             </nz-radio-group>
           </div>
         </div>
@@ -37,6 +42,14 @@
             </nz-radio-group>
           </div>
         </div>
+
+        <!-- 当选择农历时显示闰月选项
+        <div nz-form-item *ngIf="calendar === 'lunar'">
+          <div nz-form-label>是否闰月</div>
+          <div nz-form-control>
+            <nz-switch [(ngModel)]="isLeapMonth" name="isLeapMonth"></nz-switch>
+          </div>
+        </div> -->
 
         <div class="button-container">
           <button 

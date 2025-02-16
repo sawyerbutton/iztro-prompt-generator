@@ -192,9 +192,9 @@ ${wealthInfo}
 
     // 基本信息
     lines.push('----------基本信息----------');
-    lines.push(`命主性别：${data.gender === 'male' ? '男' : '女'}`);
+    lines.push(`命主性别：${data.gender}`);
     lines.push(`阳历生日：${data.solarDate}`);
-    lines.push(`阴历生日：${data.lunarDate}`);
+    lines.push(`农历生日：${data.lunarDate}`);
     lines.push(`八字：${data.chineseDate}`);
     lines.push(`生辰时辰：${data.time} (${data.timeRange})`);
     lines.push(`星座：${data.sign}`);
@@ -221,71 +221,66 @@ ${wealthInfo}
     const lines: string[] = [];
 
     // 宫位基本信息
-    lines.push(`宫位${palace.index}号位，宫位名称是${palace.name}。`);
-    lines.push(`${palace.isBodyPalace ? '是' : '不是'}身宫，${palace.isOriginalPalace ? '是' : '不是'}来因宫。`);
-    lines.push(`宫位天干为${palace.heavenlyStem}，宫位地支为${palace.earthlyBranch}。`);
+    lines.push(`宫位：${palace.name}（${palace.index}号位）`);
+    lines.push(`${palace.isBodyPalace ? '是' : '不是'}身宫，${palace.isOriginalPalace ? '是' : '不是'}来因宫`);
+    lines.push(`天干：${palace.heavenlyStem}，地支：${palace.earthlyBranch}`);
 
     // 主星信息
-    const majorStars = palace.majorStars.map((star: any) => {
-      let desc = star.name;
-      if (star.scope === 'origin') {
-        desc += '（本命星耀';
-      } else {
-        desc += `（${star.scope}星耀`;
-      }
-      
-      if (star.brightness) {
-        desc += `，亮度为${star.brightness}`;
-      } else {
-        desc += '，无亮度标志';
-      }
-
-      if (star.type === 'major') {
-        if (star.mutagen) {
-          desc += `，${star.mutagen}四化星`;
-        } else {
-          desc += '，无四化星';
+    if (palace.majorStars && palace.majorStars.length > 0) {
+      const majorStars = palace.majorStars.map((star: any) => {
+        let desc = star.name;
+        if (star.brightness) {
+          desc += `（${star.brightness}）`;
         }
-      }
-      
-      desc += '）';
-      return desc;
-    });
-    lines.push(`主星：${majorStars.join('，')}`);
+        if (star.mutagen) {
+          desc += `（${star.mutagen}化）`;
+        }
+        return desc;
+      });
+      lines.push(`主星：${majorStars.join('，')}`);
+    } else {
+      lines.push('主星：无');
+    }
 
     // 辅星信息
-    if (!palace.minorStars || palace.minorStars.length === 0) {
-      lines.push('辅星：无');
-    } else {
-      const minorStars = palace.minorStars.map((star: any) => 
-        `${star.name}（本命星耀）`
-      );
+    if (palace.minorStars && palace.minorStars.length > 0) {
+      const minorStars = palace.minorStars.map((star: any) => {
+        let desc = star.name;
+        if (star.brightness) {
+          desc += `（${star.brightness}）`;
+        }
+        return desc;
+      });
       lines.push(`辅星：${minorStars.join('，')}`);
+    } else {
+      lines.push('辅星：无');
     }
 
     // 杂耀信息
-    const adjectiveStars = palace.adjectiveStars.map((star: any) => 
-      `${star.name}（本命星耀）`
-    );
-    lines.push(`杂耀：${adjectiveStars.join('，')}`);
+    if (palace.adjectiveStars && palace.adjectiveStars.length > 0) {
+      const adjectiveStars = palace.adjectiveStars.map((star: any) => star.name);
+      lines.push(`杂耀：${adjectiveStars.join('，')}`);
+    } else {
+      lines.push('杂耀：无');
+    }
 
-    // 12神信息
-    lines.push(`长生12神：${palace.changsheng12}`);
-    lines.push(`博士12神：${palace.boshi12}`);
-    lines.push(`流年将前12神：${palace.jiangqian12}`);
-    lines.push(`流年岁前12神：${palace.suiqian12}`);
+    // 十二神信息
+    lines.push(`长生十二神：${palace.changsheng12}`);
+    lines.push(`博士十二神：${palace.boshi12}`);
+    lines.push(`流年将前十二神：${palace.jiangqian12}`);
+    lines.push(`流年岁前十二神：${palace.suiqian12}`);
 
     // 大限信息
     if (palace.decadal) {
       lines.push(
-        `大限：${palace.decadal.range[0]},${palace.decadal.range[1]}` +
-        `(运限天干为${palace.decadal.heavenlyStem}，运限地支为${palace.decadal.earthlyBranch})`
+        `大限：${palace.decadal.range[0]}-${palace.decadal.range[1]}岁` +
+        `（${palace.decadal.heavenlyStem}${palace.decadal.earthlyBranch}）`
       );
     }
 
     // 小限信息
-    if (palace.ages) {
-      lines.push(`小限：${palace.ages.join(',')}`);
+    if (palace.ages && palace.ages.length > 0) {
+      lines.push(`小限：${palace.ages.join('，')}岁`);
     }
 
     return lines.join('\n');

@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { CommonModule } from '@angular/common';
 import { PromptTextComponent } from './components/prompt-text/prompt-text.component';
 import { AstroChartComponent } from './components/astro-chart/astro-chart.component';
+import { SolarAstroParams, LunarAstroParams } from './utils/astro.utils';
 
 @Component({
   selector: 'app-root',
@@ -41,18 +42,36 @@ import { AstroChartComponent } from './components/astro-chart/astro-chart.compon
 export class AppComponent {
   title = 'iztro-prompt-generator';
   dateValue: Date | null = null;
-  timeValue: Date | null = null;
-  gender: 'male' | 'female' = 'male';
+  timeIndex: number | null = null;
+  gender: '男' | '女' = '男';
   calendar: 'solar' | 'lunar' = 'solar';
+  fixLeap: boolean = true;
   
   showResult = false;
   chartData: any = null;
   promptText: string | null = null;
 
+  // 时辰选项
+  timeOptions = [
+    { label: '早子时 (23:00-01:00)', value: 0 },
+    { label: '丑时 (01:00-03:00)', value: 1 },
+    { label: '寅时 (03:00-05:00)', value: 2 },
+    { label: '卯时 (05:00-07:00)', value: 3 },
+    { label: '辰时 (07:00-09:00)', value: 4 },
+    { label: '巳时 (09:00-11:00)', value: 5 },
+    { label: '午时 (11:00-13:00)', value: 6 },
+    { label: '未时 (13:00-15:00)', value: 7 },
+    { label: '申时 (15:00-17:00)', value: 8 },
+    { label: '酉时 (17:00-19:00)', value: 9 },
+    { label: '戌时 (19:00-21:00)', value: 10 },
+    { label: '亥时 (21:00-23:00)', value: 11 },
+    { label: '晚子时 (23:00-01:00)', value: 12 }
+  ];
+
   get isFormValid(): boolean {
     return !!(
       this.dateValue && 
-      this.timeValue && 
+      this.timeIndex !== null && 
       this.gender && 
       this.calendar
     );
@@ -64,34 +83,51 @@ export class AppComponent {
     }
 
     try {
-      if (!this.dateValue || !this.timeValue) {
+      if (!this.dateValue || this.timeIndex === null) {
         return;
       }
       
-      const dateStr = format(this.dateValue, 'yyyy-MM-dd');
-      const timeStr = format(this.timeValue, 'HH:mm');
-      const dateTimeStr = `${dateStr} ${timeStr}`;
-
-      // 根据选择的历法调用相应的方法
-      const params = {
-        date: dateTimeStr,
-        gender: this.gender
-      };
+      const dateStr = format(this.dateValue, 'yyyy-M-d');
 
       if (this.calendar === 'solar') {
-        this.chartData = AstroUtils.calculateBySolar(params);
+        const solarParams: SolarAstroParams = {
+          solarDateStr: dateStr,
+          timeIndex: this.timeIndex,
+          gender: this.gender,
+          fixLeap: this.fixLeap
+        };
+        this.chartData = AstroUtils.calculateBySolar(solarParams);
       } else {
-        this.chartData = AstroUtils.calculateByLunar(params);
+        const lunarParams: LunarAstroParams = {
+          lunarDateStr: dateStr,
+          timeIndex: this.timeIndex,
+          gender: this.gender,
+          fixLeap: this.fixLeap
+        };
+        this.chartData = AstroUtils.calculateByLunar(lunarParams);
       }
 
-      // 暂时将结果转为字符串显示在提示语区域
-      this.promptText = JSON.stringify(this.chartData, null, 2);
-      this.showResult = true;
-
-      console.log('生成的星盘数据:', this.chartData);
+      console.log('生成的星盘数据:', {
+        基本信息: {
+          性别: this.chartData.gender,
+          阳历日期: this.chartData.solarDate,
+          农历日期: this.chartData.lunarDate,
+          八字: this.chartData.chineseDate,
+          时辰: this.chartData.time,
+          时间范围: this.chartData.timeRange,
+          星座: this.chartData.sign,
+          生肖: this.chartData.zodiac
+        },
+        命盘信息: {
+          身宫地支: this.chartData.earthlyBranchOfBodyPalace,
+          命宫地支: this.chartData.earthlyBranchOfSoulPalace,
+          命主星: this.chartData.soul,
+          身主星: this.chartData.body,
+          五行局: this.chartData.fiveElementsClass
+        }
+      });
     } catch (error) {
       console.error('生成星盘时出错:', error);
-      // 可以添加错误提示
     }
   }
 }
