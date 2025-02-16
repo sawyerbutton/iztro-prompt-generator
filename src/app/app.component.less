@@ -1,77 +1,137 @@
 .page-container {
-  padding: 24px;
+  padding: 20px;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: #f0f2f5;
 
   .title {
+    text-align: center;
     font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     color: #1890ff;
   }
 
   .content-container {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    gap: 20px;
     max-width: 1200px;
+    margin: 0 auto;
+
+    // 桌面端样式
+    @media screen and (min-width: 768px) {
+      flex-direction: row;
+
+      .form-section {
+        flex: 0 0 300px;
+      }
+
+      .result-section {
+        flex: 1;
+      }
+    }
+
+    // 移动端样式
+    @media screen and (max-width: 767px) {
+      flex-direction: column;
+
+      .form-section {
+        width: 100%;
+      }
+
+      .result-section {
+        width: 100%;
+      }
+    }
 
     .form-section {
-      width: calc(33.33% - 12px); // 修改为占据1/3宽度
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      .form-container {
+        [nz-form-item] {
+          margin-bottom: 16px;
+
+          [nz-form-label] {
+            margin-bottom: 8px;
+          }
+
+          [nz-form-control] {
+            width: 100%;
+
+            nz-date-picker,
+            nz-time-picker,
+            nz-select {
+              width: 100%;
+            }
+
+            nz-radio-group {
+              display: flex;
+              justify-content: space-between;
+            }
+          }
+        }
+
+        .button-container {
+          text-align: center;
+          margin-top: 24px;
+
+          button {
+            min-width: 120px;
+          }
+        }
+      }
     }
 
     .result-section {
-      width: calc(66.67% - 12px); // 修改为占据2/3宽度
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      
+      // 移动端时增加一些上边距
+      @media screen and (max-width: 767px) {
+        margin-top: 20px;
+      }
+
+      .empty-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+        color: #999;
+      }
+
+      nz-tabs {
+        height: 100%;
+      }
     }
   }
 }
 
-.form-container {
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-  [nz-form-item] {
-    margin-bottom: 24px;
-  }
-
-  [nz-form-label] {
-    margin-bottom: 8px;
-  }
-
-  nz-date-picker,
-  nz-time-picker {
-    width: 100%;
-  }
-
-  .button-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 0;
-  }
-
-  nz-select {
-    width: 200px;  // 设置合适的宽度
-  }
-
-  [nz-form-control] {
-    nz-select {
-      width: 100%;  // 使select填充整个form-control区域
+// 适配移动端的其他调整
+@media screen and (max-width: 767px) {
+  :host ::ng-deep {
+    // 调整表单控件在移动端的样式
+    .ant-form-item {
+      margin-bottom: 12px !important;
     }
-  }
-}
 
-.result-section {
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    // 调整日期选择器在移动端的样式
+    .ant-picker {
+      width: 100% !important;
+    }
 
-  textarea {
-    width: 100%;
-    margin-top: 16px;
+    // 调整按钮在移动端的样式
+    .ant-btn {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    // 调整标签页在移动端的样式
+    .ant-tabs-nav {
+      margin-bottom: 12px;
+    }
   }
 }
